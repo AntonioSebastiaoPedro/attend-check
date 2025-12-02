@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -44,5 +45,53 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the classes taught by this teacher.
+     */
+    public function classes()
+    {
+        return $this->hasMany(ClassRoom::class, 'teacher_id');
+    }
+
+    /**
+     * Get the attendances recorded by this user.
+     */
+    public function recordedAttendances()
+    {
+        return $this->hasMany(Attendance::class, 'recorded_by');
+    }
+
+    /**
+     * Scope a query to only include admins.
+     */
+    public function scopeAdmins($query)
+    {
+        return $query->where('role', 'admin');
+    }
+
+    /**
+     * Scope a query to only include teachers.
+     */
+    public function scopeTeachers($query)
+    {
+        return $query->where('role', 'teacher');
+    }
+
+    /**
+     * Check if user is an admin.
+     */
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if user is a teacher.
+     */
+    public function isTeacher()
+    {
+        return $this->role === 'teacher';
     }
 }
