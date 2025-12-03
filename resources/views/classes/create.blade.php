@@ -113,6 +113,7 @@
             </div>
 
             <div class="mb-6">
+                <input type="hidden" name="active" value="0">
                 <label class="flex items-center">
                     <input
                         type="checkbox"
