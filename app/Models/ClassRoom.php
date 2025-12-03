@@ -26,7 +26,6 @@ class ClassRoom extends Model
 
     protected $casts = [
         'active' => 'boolean',
-        'academic_year' => 'integer',
     ];
 
     /**
@@ -42,7 +41,7 @@ class ClassRoom extends Model
      */
     public function students(): BelongsToMany
     {
-        return $this->belongsToMany(Student::class, 'class_student')
+        return $this->belongsToMany(Student::class, 'class_student', 'class_id', 'student_id')
             ->withTimestamps()
             ->withPivot('enrolled_at');
     }

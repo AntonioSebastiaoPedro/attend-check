@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ClassRoomController;
 
 // Rotas públicas
 Route::get('/', function () {
@@ -19,4 +20,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Turmas
+    Route::resource('classes', ClassRoomController::class);
 });

@@ -31,7 +31,7 @@ class Student extends Model
      */
     public function classes(): BelongsToMany
     {
-        return $this->belongsToMany(ClassRoom::class, 'class_student')
+        return $this->belongsToMany(ClassRoom::class, 'class_student', 'student_id', 'class_id')
             ->withTimestamps()
             ->withPivot('enrolled_at');
     }

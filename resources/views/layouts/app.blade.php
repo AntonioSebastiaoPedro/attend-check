@@ -13,8 +13,12 @@
     <nav class="bg-blue-600 text-white shadow-lg">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
-                <div>
+                <div class="flex items-center space-x-8">
                     <a href="{{ route('dashboard') }}" class="text-2xl font-bold">PresenTrack</a>
+                    <div class="hidden md:flex space-x-6">
+                        <a href="{{ route('dashboard') }}" class="hover:text-blue-200">Dashboard</a>
+                        <a href="{{ route('classes.index') }}" class="hover:text-blue-200">Turmas</a>
+                    </div>
                 </div>
                 <div class="flex items-center space-x-4">
                     <span>{{ auth()->user()->name }}</span>
