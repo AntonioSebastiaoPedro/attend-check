@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ClassRoomController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\AttendanceController;
 
 // Rotas públicas
 Route::get('/', function () {
@@ -23,4 +25,12 @@ Route::middleware(['auth'])->group(function () {
 
     // Turmas
     Route::resource('classes', ClassRoomController::class);
+
+    // Estudantes
+    Route::resource('students', StudentController::class);
+
+    // Frequência
+    Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.index');
+    Route::get('/attendances/mark', [AttendanceController::class, 'markAttendance'])->name('attendances.mark');
+    Route::post('/attendances', [AttendanceController::class, 'store'])->name('attendances.store');
 });

@@ -18,6 +18,9 @@
                     <div class="hidden md:flex space-x-6">
                         <a href="{{ route('dashboard') }}" class="hover:text-blue-200">Dashboard</a>
                         <a href="{{ route('classes.index') }}" class="hover:text-blue-200">Turmas</a>
+                        <a href="{{ route('students.index') }}" class="hover:text-blue-200">Estudantes</a>
+                        <a href="{{ route('attendances.mark') }}" class="hover:text-blue-200">Presença</a>
+                        <a href="{{ route('attendances.index') }}" class="hover:text-blue-200">Relatórios</a>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
