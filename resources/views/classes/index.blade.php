@@ -76,6 +76,7 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <a href="{{ route('classes.show', $class) }}" class="text-blue-600 hover:text-blue-900 mr-3">Ver</a>
+                        <a href="{{ route('classes.students', $class) }}" class="text-green-600 hover:text-green-900 mr-3">Alunos</a>
                         <a href="{{ route('classes.edit', $class) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Editar</a>
                         <form action="{{ route('classes.destroy', $class) }}" method="POST" class="inline">
                             @csrf

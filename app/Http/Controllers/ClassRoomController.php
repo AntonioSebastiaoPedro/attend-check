@@ -123,7 +123,7 @@ class ClassRoomController extends Controller
     /**
      * Show form to manage students in a class.
      */
-    public function manageStudents(ClassRoom $class)
+    public function students(ClassRoom $class)
     {
         $class->load('students');
         $availableStudents = Student::active()
@@ -131,7 +131,7 @@ class ClassRoomController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('classes.manage-students', compact('class', 'availableStudents'));
+        return view('classes.students', compact('class', 'availableStudents'));
     }
 
     /**
@@ -146,7 +146,7 @@ class ClassRoomController extends Controller
 
         $class->students()->attach($validated['students']);
 
-        return redirect()->route('classes.manage-students', $class)
+        return redirect()->route('classes.students', $class)
             ->with('success', 'Estudantes adicionados com sucesso!');
     }
 
@@ -157,7 +157,7 @@ class ClassRoomController extends Controller
     {
         $class->students()->detach($student->id);
 
-        return redirect()->route('classes.manage-students', $class)
+        return redirect()->route('classes.students', $class)
             ->with('success', 'Estudante removido da turma com sucesso!');
     }
 }

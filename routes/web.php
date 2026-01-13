@@ -25,6 +25,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Turmas
     Route::resource('classes', ClassRoomController::class);
+    Route::get('/classes/{class}/students', [ClassRoomController::class, 'students'])->name('classes.students');
+    Route::post('/classes/{class}/students', [ClassRoomController::class, 'attachStudents'])->name('classes.students.attach');
+    Route::delete('/classes/{class}/students/{student}', [ClassRoomController::class, 'detachStudent'])->name('classes.students.detach');
 
     // Estudantes
     Route::resource('students', StudentController::class);

@@ -7,6 +7,9 @@
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800">{{ $class->name }}</h1>
         <div class="space-x-2">
+            <a href="{{ route('classes.students', $class) }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+                Gerenciar Alunos
+            </a>
             <a href="{{ route('classes.edit', $class) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
                 Editar
             </a>
