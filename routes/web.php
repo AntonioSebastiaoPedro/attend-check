@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ClassRoomController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\UserController;
 
 // Rotas públicas
 Route::get('/', function () {
@@ -37,4 +38,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/attendances/export', [AttendanceController::class, 'export'])->name('attendances.export');
     Route::get('/attendances/mark', [AttendanceController::class, 'markAttendance'])->name('attendances.mark');
     Route::post('/attendances', [AttendanceController::class, 'store'])->name('attendances.store');
+
+    // Gestão de Usuários (Apenas Admin)
+    Route::middleware(['can:admin'])->group(function () {
+        Route::resource('users', UserController::class);
+    });
 });

@@ -21,6 +21,9 @@
                         <a href="{{ route('students.index') }}" class="hover:text-blue-200">Estudantes</a>
                         <a href="{{ route('attendances.mark') }}" class="hover:text-blue-200">Presença</a>
                         <a href="{{ route('attendances.index') }}" class="hover:text-blue-200">Relatórios</a>
+                        @can('admin')
+                        <a href="{{ route('users.index') }}" class="hover:text-blue-200">Professores</a>
+                        @endcan
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
