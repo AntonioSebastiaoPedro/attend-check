@@ -43,9 +43,14 @@
                         {{ $student->active ? 'Ativo' : 'Inativo' }}
                     </span>
                 </td>
-                <td class="px-6 py-4 text-right space-x-2">
+                <td class="px-6 py-4 text-right space-x-2 flex justify-end items-center">
                     <a href="{{ route('students.show', $student) }}" class="text-blue-600 hover:underline">Ver</a>
                     <a href="{{ route('students.edit', $student) }}" class="text-yellow-600 hover:underline">Editar</a>
+                    <form action="{{ route('students.destroy', $student) }}" method="POST" class="inline" onsubmit="return confirm('Tem certeza que deseja remover este estudante?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="text-red-600 hover:underline">Excluir</button>
+                    </form>
                 </td>
             </tr>
             @empty
