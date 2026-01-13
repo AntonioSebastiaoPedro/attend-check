@@ -15,44 +15,57 @@ class AttendanceController extends Controller
      */
     public function index(Request $request)
     {
+        $user = auth()->user();
         $query = Attendance::with(['student', 'class', 'recordedBy']);
 
+        // Se for professor, limita aos dados das suas turmas
+        if ($user->isTeacher()) {
+            $query->whereIn('class_id', $user->classes->pluck('id'));
+        }
+
         // Filtro por turma
-        if ($request->has('class_id')) {
-            $query->forClass($request->class_id);
+        if ($request->filled('class_id')) {
+            $query->where('class_id', $request->class_id);
         }
 
-        // Filtro por estudante
-        if ($request->has('student_id')) {
-            $query->forStudent($request->student_id);
+        // Filtro por estudante (Search string ou ID)
+        if ($request->filled('student_search')) {
+            $search = $request->student_search;
+            $query->whereHas('student', function($q) use ($search) {
+                $q->where('name', 'ilike', "%{$search}%")
+                  ->orWhere('registration_number', 'ilike', "%{$search}%");
+            });
         }
 
-        // Filtro por data (RF04)
-        if ($request->has('date')) {
-            $query->forDate($request->date);
+        // Filtro por data específica
+        if ($request->filled('date')) {
+            $query->where('date', $request->date);
         }
 
         // Filtro por período
-        if ($request->has('start_date') && $request->has('end_date')) {
-            $query->whereBetween('date', [$request->start_date, $request->end_date]);
+        if ($request->filled('start_date')) {
+            $query->where('date', '>=', $request->start_date);
+        }
+        if ($request->filled('end_date')) {
+            $query->where('date', '<=', $request->end_date);
         }
 
         // Filtro por status
-        if ($request->has('status')) {
-            if ($request->status == 'present') {
-                $query->present();
-            } elseif ($request->status == 'absent') {
-                $query->absent();
-            }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
         }
 
-        $attendances = $query->latest('date')->latest('time')->paginate(30);
+        $attendances = $query->latest('date')->latest('time')->paginate(30)->withQueryString();
 
-        // Dados para filtros
-        $classes = ClassRoom::active()->orderBy('name')->get();
-        $students = Student::active()->orderBy('name')->get();
+        // Dados para os campos de seleção do filtro
+        $classes = ClassRoom::active()
+            ->when($user->isTeacher(), function($q) use ($user) {
+                $q->where('teacher_id', $user->id);
+            })
+            ->orderBy('name')
+            ->get();
 
-        return view('attendances.index', compact('attendances', 'classes', 'students'));
+        return view('attendances.index', compact('attendances', 'classes'));
     }
 
     /**
@@ -203,17 +216,35 @@ class AttendanceController extends Controller
      */
     public function export(Request $request)
     {
+        $user = auth()->user();
         $query = Attendance::with(['student', 'class', 'recordedBy']);
 
         // Aplicar os mesmos filtros da listagem
-        if ($request->has('class_id') && $request->class_id) {
-            $query->forClass($request->class_id);
+        if ($user->isTeacher()) {
+            $query->whereIn('class_id', $user->classes->pluck('id'));
         }
-        if ($request->has('date') && $request->date) {
-            $query->forDate($request->date);
+
+        if ($request->filled('class_id')) {
+            $query->where('class_id', $request->class_id);
         }
-        if ($request->has('status') && $request->status) {
-            $request->status == 'present' ? $query->present() : $query->absent();
+
+        if ($request->filled('student_search')) {
+            $search = $request->student_search;
+            $query->whereHas('student', function($q) use ($search) {
+                $q->where('name', 'ilike', "%{$search}%")
+                  ->orWhere('registration_number', 'ilike', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('start_date')) {
+            $query->where('date', '>=', $request->start_date);
+        }
+        if ($request->filled('end_date')) {
+            $query->where('date', '<=', $request->end_date);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
         }
 
         $attendances = $query->latest('date')->get();

@@ -16,33 +16,68 @@
     </div>
 </div>
 
-<div class="bg-white rounded-lg shadow p-6 mb-6">
-    <form action="{{ route('attendances.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Turma</label>
-            <select name="class_id" class="w-full border rounded px-4 py-2">
-                <option value="">Todas as turmas</option>
-                @foreach($classes as $class)
-                <option value="{{ $class->id }}" {{ request('class_id') == $class->id ? 'selected' : '' }}>
-                    {{ $class->name }}
-                </option>
-                @endforeach
-            </select>
-        </div>
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Data</label>
-            <input type="date" name="date" value="{{ request('date') }}" class="w-full border rounded px-4 py-2">
-        </div>
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-            <select name="status" class="w-full border rounded px-4 py-2">
-                <option value="">Todos</option>
-                <option value="present" {{ request('status') == 'present' ? 'selected' : '' }}>Presente</option>
-                <option value="absent" {{ request('status') == 'absent' ? 'selected' : '' }}>Faltou</option>
-            </select>
-        </div>
-        <div>
-            <button type="submit" class="w-full bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">Filtrar</button>
+<div class="bg-white rounded-lg shadow p-6 mb-6 border border-gray-100">
+    <h2 class="text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider flex items-center">
+        <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+        Filtros Avançados
+    </h2>
+
+    <form action="{{ route('attendances.index') }}" method="GET">
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Buscar Aluno -->
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Buscar Aluno</label>
+                <input type="text" name="student_search" value="{{ request('student_search') }}"
+                       placeholder="Nome ou Nº Matrícula"
+                       class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
+            </div>
+
+            <!-- Turma -->
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Turma</label>
+                <select name="class_id" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
+                    <option value="">Todas as Turmas</option>
+                    @foreach($classes as $class)
+                    <option value="{{ $class->id }}" {{ request('class_id') == $class->id ? 'selected' : '' }}>
+                        {{ $class->name }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Data Início -->
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">De (Data)</label>
+                <input type="date" name="start_date" value="{{ request('start_date') }}"
+                       class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
+            </div>
+
+            <!-- Data Fim -->
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Até (Data)</label>
+                <input type="date" name="end_date" value="{{ request('end_date') }}"
+                       class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
+            </div>
+
+            <!-- Status -->
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Status</label>
+                <select name="status" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
+                    <option value="">Todos</option>
+                    <option value="present" {{ request('status') == 'present' ? 'selected' : '' }}>Presente</option>
+                    <option value="absent" {{ request('status') == 'absent' ? 'selected' : '' }}>Faltou</option>
+                </select>
+            </div>
+
+            <!-- Botões -->
+            <div class="md:col-span-2 lg:col-span-3 flex items-end gap-3">
+                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-700 transition shadow-sm">
+                    Aplicar Filtros
+                </button>
+                <a href="{{ route('attendances.index') }}" class="bg-gray-100 text-gray-600 px-6 py-2 rounded-lg font-bold hover:bg-gray-200 transition">
+                    Limpar
+                </a>
+            </div>
         </div>
     </form>
 </div>
