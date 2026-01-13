@@ -5,9 +5,15 @@
 @section('content')
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold">Histórico de Frequência</h1>
-    <a href="{{ route('attendances.mark') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-        Registrar Nova Presença
-    </a>
+    <div class="flex gap-2">
+        <a href="{{ route('attendances.export', request()->all()) }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center gap-2">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Exportar CSV
+        </a>
+        <a href="{{ route('attendances.mark') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Registrar Nova Presença
+        </a>
+    </div>
 </div>
 
 <div class="bg-white rounded-lg shadow p-6 mb-6">

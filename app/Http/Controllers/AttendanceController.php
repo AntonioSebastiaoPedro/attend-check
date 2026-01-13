@@ -197,4 +197,56 @@ class AttendanceController extends Controller
             'endDate'
         ));
     }
+
+    /**
+     * Export attendances to CSV.
+     */
+    public function export(Request $request)
+    {
+        $query = Attendance::with(['student', 'class', 'recordedBy']);
+
+        // Aplicar os mesmos filtros da listagem
+        if ($request->has('class_id') && $request->class_id) {
+            $query->forClass($request->class_id);
+        }
+        if ($request->has('date') && $request->date) {
+            $query->forDate($request->date);
+        }
+        if ($request->has('status') && $request->status) {
+            $request->status == 'present' ? $query->present() : $query->absent();
+        }
+
+        $attendances = $query->latest('date')->get();
+
+        $fileName = 'presencas_' . now()->format('Y-m-d_H-i') . '.csv';
+
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = ['Data', 'Estudante', 'Matricula', 'Turma', 'Status', 'Registrado Por'];
+
+        $callback = function() use ($attendances, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($attendances as $attendance) {
+                fputcsv($file, [
+                    $attendance->date->format('d/m/Y'),
+                    $attendance->student->name,
+                    $attendance->student->registration_number,
+                    $attendance->class->name,
+                    $attendance->status == 'present' ? 'Presente' : 'Faltou',
+                    $attendance->recordedBy->name ?? 'N/A',
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }

@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Frequência
     Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.index');
+    Route::get('/attendances/export', [AttendanceController::class, 'export'])->name('attendances.export');
     Route::get('/attendances/mark', [AttendanceController::class, 'markAttendance'])->name('attendances.mark');
     Route::post('/attendances', [AttendanceController::class, 'store'])->name('attendances.store');
 });
