@@ -7,11 +7,13 @@
     <div class="col">
         <h1 class="h3 font-weight-bold mb-0">Estudantes</h1>
     </div>
+    @can('admin')
     <div class="col-auto">
         <a href="{{ route('students.create') }}" class="btn btn-primary shadow-sm">
             Novo Estudante
         </a>
     </div>
+    @endcan
 </div>
 
 <div class="card shadow-sm border-0">
@@ -51,12 +53,14 @@
                     <td class="align-middle text-right">
                         <div class="d-flex justify-content-end align-items-center">
                             <a href="{{ route('students.show', $student) }}" class="btn btn-sm btn-outline-primary mr-1">Ver</a>
+                            @can('admin')
                             <a href="{{ route('students.edit', $student) }}" class="btn btn-sm btn-outline-dark mr-1">Editar</a>
                             <form action="{{ route('students.destroy', $student) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover este estudante?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-danger">Remover</button>
                             </form>
+                            @endcan
                         </div>
                     </td>
                 </tr>

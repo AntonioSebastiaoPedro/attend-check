@@ -45,8 +45,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/classes/{class}/students', [ClassRoomController::class, 'attachStudents'])->name('classes.students.attach');
     Route::delete('/classes/{class}/students/{student}', [ClassRoomController::class, 'detachStudent'])->name('classes.students.detach');
 
-    // Estudantes
-    Route::resource('students', StudentController::class);
+    // Estudantes (Visualização)
+    Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+    Route::get('/students/{student}', [StudentController::class, 'show'])->name('students.show');
+
+    // Estudantes (Gestão apenas Admin)
+    Route::middleware(['can:admin'])->group(function () {
+        Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
+        Route::post('/students', [StudentController::class, 'store'])->name('students.store');
+        Route::get('/students/{student}/edit', [StudentController::class, 'edit'])->name('students.edit');
+        Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
+        Route::delete('/students/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
+    });
 
     // Frequência
     Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.index');

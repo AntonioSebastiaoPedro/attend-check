@@ -8,9 +8,11 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h3 font-weight-bold mb-0">Perfil do Estudante</h1>
             <div class="d-flex">
+                @can('admin')
                 <a href="{{ route('students.edit', $student) }}" class="btn btn-warning shadow-sm mr-2 text-dark font-weight-bold">
                     Editar
                 </a>
+                @endcan
                 <a href="{{ route('students.index') }}" class="btn btn-secondary shadow-sm">
                     Voltar
                 </a>

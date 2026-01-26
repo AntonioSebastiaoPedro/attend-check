@@ -11,15 +11,6 @@
         </a>
     </div>
 
-    @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
-        {{ session('success') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    @endif
-
     <div class="card shadow-sm border-0 overflow-hidden">
         <div class="table-responsive">
             <table class="table table-hover mb-0">
