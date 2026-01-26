@@ -13,8 +13,11 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
+// Rotas públicas e de convidados (redirecionam se logado)
+Route::middleware(['guest'])->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+});
 
 // Rotas protegidas (requerem autenticação)
 Route::middleware(['auth'])->group(function () {
