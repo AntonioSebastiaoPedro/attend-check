@@ -3,18 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Http\Requests\User\StoreUserRequest;
+use App\Http\Requests\User\UpdateUserRequest;
+use App\Services\UserService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 
 class UserController extends Controller
 {
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
      * Display a listing of teachers.
      */
     public function index()
     {
-        $users = User::teachers()->paginate(10);
+        $users = $this->userService->getPaginatedTeachers();
         return view('users.index', compact('users'));
     }
 
@@ -29,20 +37,9 @@ class UserController extends Controller
     /**
      * Store a newly created teacher in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'teacher',
-        ]);
+        $this->userService->createTeacher($request->validated());
 
         return redirect()->route('users.index')
             ->with('success', 'Professor cadastrado com sucesso!');
@@ -64,22 +61,9 @@ class UserController extends Controller
     /**
      * Update the specified teacher in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,'.$user->id],
-            'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
-        ]);
-
-        $user->name = $request->name;
-        $user->email = $request->email;
-
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
-        }
-
-        $user->save();
+        $this->userService->updateTeacher($user, $request->validated());
 
         return redirect()->route('users.index')
             ->with('success', 'Dados do professor atualizados!');
@@ -90,19 +74,13 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        if ($user->isAdmin()) {
-            return redirect()->route('users.index')->with('error', 'Não é possível remover um administrador.');
-        }
-
-        // Verifica se o professor tem turmas associadas
-        if ($user->classes()->count() > 0) {
+        try {
+            $this->userService->deleteTeacher($user);
             return redirect()->route('users.index')
-                ->with('error', 'Este professor não pode ser removido pois possui turmas associadas.');
+                ->with('success', 'Professor removido com sucesso!');
+        } catch (\Exception $e) {
+            return redirect()->route('users.index')
+                ->with('error', $e->getMessage());
         }
-
-        $user->delete();
-
-        return redirect()->route('users.index')
-            ->with('success', 'Professor removido com sucesso!');
     }
 }

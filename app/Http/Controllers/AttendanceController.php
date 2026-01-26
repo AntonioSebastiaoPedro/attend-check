@@ -5,57 +5,29 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\ClassRoom;
 use App\Models\Student;
+use App\Http\Requests\Attendance\StoreAttendanceRequest;
+use App\Services\AttendanceService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
+    protected $attendanceService;
+
+    public function __construct(AttendanceService $attendanceService)
+    {
+        $this->attendanceService = $attendanceService;
+    }
+
     /**
      * Display attendance list with filters.
      */
     public function index(Request $request)
     {
         $user = auth()->user();
-        $query = Attendance::with(['student', 'class', 'recordedBy']);
+        $filters = $request->all();
+        $filters['user'] = $user;
 
-        // Se for professor, limita aos dados das suas turmas
-        if ($user->isTeacher()) {
-            $query->whereIn('class_id', $user->classes->pluck('id'));
-        }
-
-        // Filtro por turma
-        if ($request->filled('class_id')) {
-            $query->where('class_id', $request->class_id);
-        }
-
-        // Filtro por estudante (Search string ou ID)
-        if ($request->filled('student_search')) {
-            $search = $request->student_search;
-            $query->whereHas('student', function($q) use ($search) {
-                $q->where('name', 'ilike', "%{$search}%")
-                  ->orWhere('registration_number', 'ilike', "%{$search}%");
-            });
-        }
-
-        // Filtro por data específica
-        if ($request->filled('date')) {
-            $query->where('date', $request->date);
-        }
-
-        // Filtro por período
-        if ($request->filled('start_date')) {
-            $query->where('date', '>=', $request->start_date);
-        }
-        if ($request->filled('end_date')) {
-            $query->where('date', '<=', $request->end_date);
-        }
-
-        // Filtro por status
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        $attendances = $query->latest('date')->latest('time')->paginate(30)->withQueryString();
+        $attendances = $this->attendanceService->getAttendances($filters);
 
         // Dados para os campos de seleção do filtro
         $classes = ClassRoom::active()
@@ -103,44 +75,17 @@ class AttendanceController extends Controller
     /**
      * Store attendance records (RF03, RF09).
      */
-    public function store(Request $request)
+    public function store(StoreAttendanceRequest $request)
     {
-        $validated = $request->validate([
-            'class_id' => 'required|exists:classes,id',
-            'date' => 'required|date',
-            'attendances' => 'required|array',
-            'attendances.*.student_id' => 'required|exists:students,id',
-            'attendances.*.status' => 'required|in:present,absent',
-            'attendances.*.notes' => 'nullable|string',
-        ]);
-
-        DB::beginTransaction();
         try {
-            foreach ($validated['attendances'] as $attendanceData) {
-                Attendance::updateOrCreate(
-                    [
-                        'student_id' => $attendanceData['student_id'],
-                        'class_id' => $validated['class_id'],
-                        'date' => $validated['date'],
-                    ],
-                    [
-                        'status' => $attendanceData['status'],
-                        'time' => now()->format('H:i:s'), // RF09: timestamp automático
-                        'notes' => $attendanceData['notes'] ?? null,
-                        'recorded_by' => auth()->id(),
-                    ]
-                );
-            }
-
-            DB::commit();
+            $this->attendanceService->storeAttendances($request->validated(), auth()->id());
 
             return redirect()->route('attendances.mark', [
-                'class_id' => $validated['class_id'],
-                'date' => $validated['date']
+                'class_id' => $request->class_id,
+                'date' => $request->date
             ])->with('success', 'Presenças registradas com sucesso!');
 
         } catch (\Exception $e) {
-            DB::rollBack();
             return back()->with('error', 'Erro ao registrar presenças: ' . $e->getMessage());
         }
     }
@@ -156,22 +101,17 @@ class AttendanceController extends Controller
             ->latest('time')
             ->paginate(30);
 
-        // Estatísticas
-        $totalAttendances = $student->attendances()->count();
-        $totalPresent = $student->attendances()->present()->count();
-        $totalAbsent = $student->attendances()->absent()->count();
-        $attendanceRate = $totalAttendances > 0
-            ? round(($totalPresent / $totalAttendances) * 100, 2)
-            : 0;
+        $stats = $this->attendanceService->getStudentStats($student);
 
-        return view('attendances.student-history', compact(
-            'student',
-            'attendances',
-            'totalAttendances',
-            'totalPresent',
-            'totalAbsent',
-            'attendanceRate'
-        ));
+        return view('attendances.student-history', array_merge([
+            'student' => $student,
+            'attendances' => $attendances,
+        ], [
+            'totalAttendances' => $stats['total'],
+            'totalPresent' => $stats['present'],
+            'totalAbsent' => $stats['absent'],
+            'attendanceRate' => $stats['rate'],
+        ]));
     }
 
     /**
@@ -182,26 +122,7 @@ class AttendanceController extends Controller
         $startDate = $request->get('start_date', now()->subMonth()->format('Y-m-d'));
         $endDate = $request->get('end_date', now()->format('Y-m-d'));
 
-        $students = $class->students()->with(['attendances' => function($query) use ($class, $startDate, $endDate) {
-            $query->forClass($class->id)
-                ->whereBetween('date', [$startDate, $endDate]);
-        }])->get();
-
-        // Calcular estatísticas para cada estudante
-        $studentsStats = $students->map(function($student) {
-            $total = $student->attendances->count();
-            $present = $student->attendances->where('status', 'present')->count();
-            $absent = $student->attendances->where('status', 'absent')->count();
-            $rate = $total > 0 ? round(($present / $total) * 100, 2) : 0;
-
-            return [
-                'student' => $student,
-                'total' => $total,
-                'present' => $present,
-                'absent' => $absent,
-                'rate' => $rate,
-            ];
-        });
+        $studentsStats = $this->attendanceService->getClassReportData($class, $startDate, $endDate);
 
         return view('attendances.class-report', compact(
             'class',
@@ -216,38 +137,10 @@ class AttendanceController extends Controller
      */
     public function export(Request $request)
     {
-        $user = auth()->user();
-        $query = Attendance::with(['student', 'class', 'recordedBy']);
+        $filters = $request->all();
+        $filters['user'] = auth()->user();
 
-        // Aplicar os mesmos filtros da listagem
-        if ($user->isTeacher()) {
-            $query->whereIn('class_id', $user->classes->pluck('id'));
-        }
-
-        if ($request->filled('class_id')) {
-            $query->where('class_id', $request->class_id);
-        }
-
-        if ($request->filled('student_search')) {
-            $search = $request->student_search;
-            $query->whereHas('student', function($q) use ($search) {
-                $q->where('name', 'ilike', "%{$search}%")
-                  ->orWhere('registration_number', 'ilike', "%{$search}%");
-            });
-        }
-
-        if ($request->filled('start_date')) {
-            $query->where('date', '>=', $request->start_date);
-        }
-        if ($request->filled('end_date')) {
-            $query->where('date', '<=', $request->end_date);
-        }
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        $attendances = $query->latest('date')->get();
+        $attendances = $this->attendanceService->getExportData($filters);
 
         $fileName = 'presencas_' . now()->format('Y-m-d_H-i') . '.csv';
 
