@@ -1,126 +1,67 @@
 @extends('layouts.app')
 
-@section('title', 'Histórico de Frequência')
+@section('title', 'Registro de Presença')
 
 @section('content')
-<div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold">Histórico de Frequência</h1>
-    <div class="flex gap-2">
-        <a href="{{ route('attendances.export', request()->all()) }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center gap-2">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            Exportar CSV
-        </a>
-        <a href="{{ route('attendances.mark') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-            Registrar Nova Presença
-        </a>
+<div class="container pb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 font-weight-bold text-dark mb-0">Registro de Presença</h1>
+            <p class="text-muted mb-0">Selecione uma turma para registrar as presenças do dia</p>
+        </div>
     </div>
-</div>
 
-<div class="bg-white rounded-lg shadow p-6 mb-6 border border-gray-100">
-    <h2 class="text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider flex items-center">
-        <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
-        Filtros Avançados
-    </h2>
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
+        {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    @endif
 
-    <form action="{{ route('attendances.index') }}" method="GET">
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <!-- Buscar Aluno -->
-            <div>
-                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Buscar Aluno</label>
-                <input type="text" name="student_search" value="{{ request('student_search') }}"
-                       placeholder="Nome ou Nº Matrícula"
-                       class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
-            </div>
-
-            <!-- Turma -->
-            <div>
-                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Turma</label>
-                <select name="class_id" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
-                    <option value="">Todas as Turmas</option>
-                    @foreach($classes as $class)
-                    <option value="{{ $class->id }}" {{ request('class_id') == $class->id ? 'selected' : '' }}>
-                        {{ $class->name }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- Data Início -->
-            <div>
-                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">De (Data)</label>
-                <input type="date" name="start_date" value="{{ request('start_date') }}"
-                       class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
-            </div>
-
-            <!-- Data Fim -->
-            <div>
-                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Até (Data)</label>
-                <input type="date" name="end_date" value="{{ request('end_date') }}"
-                       class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
-            </div>
-
-            <!-- Status -->
-            <div>
-                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Status</label>
-                <select name="status" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
-                    <option value="">Todos</option>
-                    <option value="present" {{ request('status') == 'present' ? 'selected' : '' }}>Presente</option>
-                    <option value="absent" {{ request('status') == 'absent' ? 'selected' : '' }}>Faltou</option>
-                </select>
-            </div>
-
-            <!-- Botões -->
-            <div class="md:col-span-2 lg:col-span-3 flex items-end gap-3">
-                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-700 transition shadow-sm">
-                    Aplicar Filtros
-                </button>
-                <a href="{{ route('attendances.index') }}" class="bg-gray-100 text-gray-600 px-6 py-2 rounded-lg font-bold hover:bg-gray-200 transition">
-                    Limpar
-                </a>
+    <div class="row">
+        @forelse($classes as $class)
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card shadow-sm border-0 h-100 hover-shadow transition">
+                <div class="card-body d-flex flex-column p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge badge-primary px-3 py-1">{{ $class->code }}</span>
+                        <div class="text-muted small">
+                            <i class="far fa-user"></i> {{ $class->students_count ?? $class->students->count() }} Alunos
+                        </div>
+                    </div>
+                    
+                    <h5 class="card-title font-weight-bold text-dark mb-2">{{ $class->name }}</h5>
+                    <p class="card-text text-muted small mb-4 flex-grow-1">
+                        {{ \Illuminate\Support\Str::limit($class->description, 100, '...') ?: 'Sem descrição disponível.' }}
+                    </p>
+                    
+                    <div class="border-top pt-3 mt-auto">
+                        <a href="{{ route('attendances.create', ['class_id' => $class->id]) }}" class="btn btn-primary btn-block py-2 font-weight-bold shadow-sm">
+                            Registrar Presença
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-    </form>
-</div>
-
-<div class="bg-white rounded-lg shadow overflow-hidden">
-    <table class="w-full">
-        <thead class="bg-gray-50 uppercase text-xs font-semibold text-gray-500">
-            <tr>
-                <th class="px-6 py-3 text-left">Data</th>
-                <th class="px-6 py-3 text-left">Estudante</th>
-                <th class="px-6 py-3 text-left">Turma</th>
-                <th class="px-6 py-3 text-left">Status</th>
-                <th class="px-6 py-3 text-left">Registrado por</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200">
-            @forelse($attendances as $attendance)
-            <tr>
-                <td class="px-6 py-4 whitespace-nowrap">{{ \Carbon\Carbon::parse($attendance->date)->format('d/m/Y') }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="font-medium text-gray-900">{{ $attendance->student->name }}</div>
-                    <div class="text-xs text-gray-500">{{ $attendance->student->registration_number }}</div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ $attendance->class->name }}</td>
-                <td class="px-6 py-4">
-                    <span class="px-2 py-1 text-xs rounded-full {{ $attendance->status == 'present' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                        {{ $attendance->status == 'present' ? 'Presente' : 'Faltou' }}
-                    </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {{ $attendance->recordedBy->name ?? 'N/A' }}
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="5" class="px-6 py-4 text-center text-gray-500">Nenhum registro encontrado.</td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    <div class="p-4">
-        {{ $attendances->links() }}
+        @empty
+        <div class="col-12 text-center py-5">
+            <div class="mb-3"><i class="fas fa-chalkboard fa-4x opacity-25"></i></div>
+            <h4 class="text-muted">Nenhuma turma encontrada</h4>
+            <p class="text-muted">Você precisa estar vinculado a turmas ativas para registrar presenças.</p>
+        </div>
+        @endforelse
     </div>
 </div>
+
+<style>
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
+    .transition {
+        transition: all 0.3s ease;
+    }
+</style>
 @endsection

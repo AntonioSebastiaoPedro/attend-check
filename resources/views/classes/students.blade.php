@@ -1,100 +1,118 @@
 @extends('layouts.app')
 
-@section('title', 'Alunos da Turma - ' . $class->name)
+@section('title', 'Gerenciar Alunos - ' . $class->name)
 
 @section('content')
-<div class="max-w-6xl mx-auto">
-    <div class="mb-6 flex items-center justify-between">
+<div class="container pb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800">{{ $class->name }}</h1>
-            <p class="text-gray-500">Gerenciar alunos matriculados nesta turma</p>
+            <h1 class="h3 font-weight-bold text-dark mb-0 font-weight-bold">{{ $class->name }}</h1>
+            <p class="text-muted mb-0">Gerenciar alunos matriculados nesta turma</p>
         </div>
-        <a href="{{ route('classes.index') }}" class="text-gray-600 hover:text-gray-800 flex items-center gap-1">
-            <span>&larr; Voltar para turmas</span>
+        <a href="{{ route('classes.index') }}" class="btn btn-outline-secondary">
+             Voltar para turmas
         </a>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="row">
         <!-- Lista de Alunos Matriculados -->
-        <div class="lg:col-span-2">
-            <div class="bg-white rounded-lg shadow overflow-hidden">
-                <div class="px-6 py-4 border-b bg-gray-50">
-                    <h3 class="font-bold text-gray-700">Alunos Matriculados ({{ $class->students->count() }})</h3>
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 overflow-hidden mb-4">
+                <div class="card-header bg-light py-3 border-bottom-0">
+                    <h5 class="card-title mb-0 font-weight-bold text-dark">Alunos Matriculados ({{ $class->students->count() }})</h5>
                 </div>
-                <table class="w-full">
-                    <thead class="bg-gray-50 uppercase text-xs font-semibold text-gray-500">
-                        <tr>
-                            <th class="px-6 py-3 text-left">Nome</th>
-                            <th class="px-6 py-3 text-left">Matrícula</th>
-                            <th class="px-6 py-3 text-right">Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        @forelse($class->students as $student)
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <a href="{{ route('students.show', $student) }}" class="text-blue-600 hover:underline font-medium">
-                                    {{ $student->name }}
-                                </a>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $student->registration_number }}</td>
-                            <td class="px-6 py-4 text-right">
-                                <form action="{{ route('classes.students.detach', [$class, $student]) }}" method="POST" class="inline" onsubmit="return confirm('Deseja realmente remover este aluno da turma?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900 text-sm font-semibold">
-                                        Remover
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="3" class="px-6 py-4 text-center text-gray-500 italic">Nenhum aluno matriculado nesta turma.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="bg-white text-uppercase small font-weight-bold text-muted">
+                            <tr>
+                                <th class="px-4 border-top-0">Nome</th>
+                                <th class="border-top-0">Matrícula</th>
+                                <th class="text-right px-4 border-top-0">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                            @forelse($class->students as $student)
+                            <tr>
+                                <td class="px-4 py-3 vertical-align-middle" style="vertical-align: middle;">
+                                    <a href="{{ route('students.show', $student) }}" class="font-weight-bold text-primary">
+                                        {{ $student->name }}
+                                    </a>
+                                </td>
+                                <td class="py-3 text-muted vertical-align-middle" style="vertical-align: middle;">
+                                    {{ $student->registration_number }}
+                                </td>
+                                <td class="text-right px-4 py-3 vertical-align-middle" style="vertical-align: middle;">
+                                    <form action="{{ route('classes.students.detach', [$class, $student]) }}" method="POST" class="d-inline" onsubmit="return confirm('Deseja realmente remover este aluno da turma?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            Remover
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="3" class="px-4 py-5 text-center text-muted italic">
+                                    Nenhum aluno matriculado nesta turma.
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <!-- Formulário para Adicionar em Massa -->
-        <div class="lg:col-span-1">
-            <div class="bg-white rounded-lg shadow p-6 sticky top-6">
-                <h3 class="font-bold text-gray-700 mb-4">Adicionar Alunos</h3>
-
-                @if($availableStudents->count() > 0)
-                <form action="{{ route('classes.students.attach', $class) }}" method="POST">
-                    @csrf
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Selecione os alunos abaixo:</label>
-                        <div class="max-h-96 overflow-y-auto border rounded-lg p-2 space-y-2">
-                            @foreach($availableStudents as $student)
-                            <label class="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded cursor-pointer border-b last:border-0 border-gray-100">
-                                <input type="checkbox" name="students[]" value="{{ $student->id }}" class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 truncate">{{ $student->name }}</p>
-                                    <p class="text-xs text-gray-500">{{ $student->registration_number }}</p>
-                                </div>
-                            </label>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 shadow-md transition duration-150">
-                        Matricular Alunos Selecionados
-                    </button>
-                    <p class="mt-4 text-xs text-gray-400 text-center italic">
-                        Dica: Somente alunos ativos e que ainda não estão nesta turma são listados.
-                    </p>
-                </form>
-                @else
-                <div class="text-center py-8">
-                    <p class="text-gray-500 italic">Todos os alunos ativos já estão matriculados nesta turma.</p>
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h5 class="card-title mb-0 font-weight-bold text-dark">Adicionar Alunos</h5>
                 </div>
-                @endif
+                <div class="card-body">
+                    @if($availableStudents->count() > 0)
+                    <form action="{{ route('classes.students.attach', $class) }}" method="POST">
+                        @csrf
+                        <div class="form-group mb-4">
+                            <label class="small font-weight-bold text-muted text-uppercase mb-2 d-block">Selecione os alunos abaixo:</label>
+                            <div class="border rounded p-2" style="max-height: 400px; overflow-y: auto; background-color: #fcfcfc;">
+                                @foreach($availableStudents as $student)
+                                <div class="custom-control custom-checkbox p-2 border-bottom last-child-border-0">
+                                    <input type="checkbox" name="students[]" value="{{ $student->id }}" class="custom-control-input" id="student_{{ $student->id }}">
+                                    <label class="custom-control-label d-block cursor-pointer pl-1" for="student_{{ $student->id }}">
+                                        <div class="font-weight-bold text-dark mb-0" style="font-size: 0.9rem;">{{ $student->name }}</div>
+                                        <div class="small text-muted">{{ $student->registration_number }}</div>
+                                    </label>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block py-2 font-weight-bold shadow-sm">
+                            Matricular Selecionados
+                        </button>
+                        <p class="mt-3 small text-muted text-center italic">
+                            Somente alunos ativos e que ainda não estão nesta turma são listados.
+                        </p>
+                    </form>
+                    @else
+                    <div class="text-center py-4">
+                        <p class="text-muted italic mb-0">Todos os alunos ativos já estão matriculados nesta turma.</p>
+                    </div>
+                    @endif
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .last-child-border-0:last-child {
+        border-bottom: 0 !important;
+    }
+    .cursor-pointer {
+        cursor: pointer;
+    }
+</style>
 @endsection

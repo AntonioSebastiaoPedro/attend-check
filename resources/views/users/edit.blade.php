@@ -1,62 +1,86 @@
 @extends('layouts.app')
 
-@section('title', 'Editar Professor')
+@section('title', 'Editar Usuário')
 
 @section('content')
-<div class="max-w-2xl mx-auto">
-    <div class="mb-6 flex items-center">
-        <a href="{{ route('users.index') }}" class="text-blue-600 hover:underline flex items-center mr-4">
-            <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-            Voltar
-        </a>
-        <h1 class="text-2xl font-bold text-gray-800">Editar Professor: {{ $user->name }}</h1>
-    </div>
-
-    <div class="bg-white rounded-xl shadow-sm p-8 border border-gray-100">
-        <form action="{{ route('users.update', $user) }}" method="POST">
-            @csrf
-            @method('PUT')
-
-            <div class="space-y-6">
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nome Completo</label>
-                    <input type="text" name="name" value="{{ old('name', $user->name) }}" required
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 @error('name') border-red-500 @enderror">
-                    @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">E-mail Corporativo</label>
-                    <input type="email" name="email" value="{{ old('email', $user->email) }}" required
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 @error('email') border-red-500 @enderror">
-                    @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                </div>
-
-                <div class="bg-blue-50 p-4 rounded-lg">
-                    <p class="text-xs text-blue-800 font-semibold mb-3">ALTERAR PALAVRA-PASSE (Opcional)</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Nova Palavra-passe</label>
-                            <input type="password" name="password"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 @error('password') border-red-500 @enderror">
-                            @error('password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Confirmar Nova Palavra-passe</label>
-                            <input type="password" name="password_confirmation"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                        </div>
-                    </div>
-                </div>
+<div class="container pb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 font-weight-bold text-dark mb-0">Editar Usuário</h1>
+                <a href="{{ route('users.index') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </a>
             </div>
 
-            <div class="mt-8">
-                <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg font-bold hover:bg-blue-700 transition">
-                    Atualizar Dados
-                </button>
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ route('users.update', $user) }}">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="form-group mb-4">
+                            <label for="name" class="font-weight-bold text-muted small text-uppercase">Nome Completo *</label>
+                            <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" required class="form-control @error('name') is-invalid @enderror">
+                            @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="email" class="font-weight-bold text-muted small text-uppercase">Endereço de E-mail *</label>
+                            <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required class="form-control @error('email') is-invalid @enderror">
+                            @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="role" class="font-weight-bold text-muted small text-uppercase">Função / Papel *</label>
+                            <select id="role" name="role" required class="form-control custom-select @error('role') is-invalid @enderror" {{ $user->id === auth()->id() ? 'disabled' : '' }}>
+                                <option value="teacher" {{ old('role', $user->role) === 'teacher' ? 'selected' : '' }}>Professor</option>
+                                <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Administrador</option>
+                            </select>
+                            @if($user->id === auth()->id())
+                                <input type="hidden" name="role" value="{{ $user->role }}">
+                                <small class="form-text text-muted italic">Você não pode alterar seu próprio papel administrativo.</small>
+                            @endif
+                            @error('role')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="bg-light p-3 rounded mb-4 border">
+                            <p class="font-weight-bold text-dark small text-uppercase mb-2">Alterar Senha</p>
+                            <p class="small text-muted mb-3">Deixe em branco se não desejar alterar a senha atual.</p>
+                            
+                            <div class="form-row">
+                                <div class="col-md-6 form-group">
+                                    <label for="password" class="small font-weight-bold text-muted">Nova Senha</label>
+                                    <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror">
+                                    @error('password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for="password_confirmation" class="small font-weight-bold text-muted">Confirmar Nova Senha</label>
+                                    <input type="password" id="password_confirmation" name="password_confirmation" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="mb-4">
+
+                        <div class="d-flex justify-content-end">
+                            <a href="{{ route('users.index') }}" class="btn btn-link text-muted mr-3">Cancelar</a>
+                            <button type="submit" class="btn btn-primary px-5 shadow-sm">
+                                Atualizar Usuário
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 @endsection
