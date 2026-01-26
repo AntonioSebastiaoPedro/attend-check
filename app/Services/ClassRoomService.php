@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 class ClassRoomService
 {
     /**
-     * Get classes with filters.
+     * Retorna as turmas com filtros.
      */
     public function getClasses(array $filters = []): LengthAwarePaginator
     {
@@ -38,7 +38,7 @@ class ClassRoomService
     }
 
     /**
-     * Create a new class.
+     * Cria uma nova turma.
      */
     public function createClass(array $data): ClassRoom
     {
@@ -46,7 +46,7 @@ class ClassRoomService
     }
 
     /**
-     * Update a class.
+     * Atualiza uma turma.
      */
     public function updateClass(ClassRoom $class, array $data): bool
     {
@@ -54,7 +54,7 @@ class ClassRoomService
     }
 
     /**
-     * Delete a class.
+     * Remove uma turma.
      */
     public function deleteClass(ClassRoom $class): bool
     {
@@ -62,7 +62,7 @@ class ClassRoomService
     }
 
     /**
-     * Load class details for show.
+     * Carrega detalhes da turma para exibição.
      */
     public function loadClassDetails(ClassRoom $class): ClassRoom
     {
@@ -72,7 +72,7 @@ class ClassRoomService
     }
 
     /**
-     * Get available students for a class.
+     * Retorna estudantes disponíveis para uma turma.
      */
     public function getAvailableStudents(ClassRoom $class): Collection
     {
@@ -83,7 +83,7 @@ class ClassRoomService
     }
 
     /**
-     * Attach students to a class.
+     * Adiciona estudantes a uma turma.
      */
     public function attachStudents(ClassRoom $class, array $studentIds): void
     {
@@ -91,7 +91,7 @@ class ClassRoomService
     }
 
     /**
-     * Detach a student from a class.
+     * Remove um estudante de uma turma.
      */
     public function detachStudent(ClassRoom $class, int $studentId): void
     {

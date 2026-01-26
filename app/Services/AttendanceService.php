@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 class AttendanceService
 {
     /**
-     * Get attendances with filters.
+     * Retorna as presenças com filtros.
      */
     public function getAttendances(array $filters = []): LengthAwarePaginator
     {
@@ -58,7 +58,7 @@ class AttendanceService
     }
 
     /**
-     * Store attendance records.
+     * Armazena os registros de presença.
      *
      * @throws \Exception
      */
@@ -89,7 +89,7 @@ class AttendanceService
     }
 
     /**
-     * Get student attendance stats and history.
+     * Retorna estatísticas de presença de um estudante.
      */
     public function getStudentStats(Student $student): array
     {
@@ -109,7 +109,7 @@ class AttendanceService
     }
 
     /**
-     * Get class report data.
+     * Retorna os dados do relatório de uma turma.
      */
     public function getClassReportData(ClassRoom $class, string $startDate, string $endDate): Collection
     {
@@ -135,7 +135,7 @@ class AttendanceService
     }
 
     /**
-     * Get data for export.
+     * Retorna os dados para exportação.
      */
     public function getExportData(array $filters = []): Collection
     {

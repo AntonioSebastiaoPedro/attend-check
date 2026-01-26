@@ -8,7 +8,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class StudentService
 {
     /**
-     * Get students with filters.
+     * Retorna estudantes com filtros.
      */
     public function getStudents(array $filters = []): LengthAwarePaginator
     {
@@ -30,7 +30,7 @@ class StudentService
     }
 
     /**
-     * Create a new student.
+     * Cria um novo estudante.
      */
     public function createStudent(array $data): Student
     {
@@ -38,7 +38,7 @@ class StudentService
     }
 
     /**
-     * Update a student.
+     * Atualiza um estudante.
      */
     public function updateStudent(Student $student, array $data): bool
     {
@@ -46,7 +46,7 @@ class StudentService
     }
 
     /**
-     * Delete a student.
+     * Remove um estudante.
      */
     public function deleteStudent(Student $student): bool
     {
@@ -54,7 +54,7 @@ class StudentService
     }
 
     /**
-     * Load student details for show.
+     * Carrega detalhes do estudante para exibição.
      */
     public function loadStudentDetails(Student $student): Student
     {

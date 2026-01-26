@@ -18,7 +18,7 @@ class UserController extends Controller
     }
 
     /**
-     * Display a listing of teachers.
+     * Exibe uma listagem de professores.
      */
     public function index()
     {
@@ -27,7 +27,7 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new teacher.
+     * Mostra o formulário para criar um novo professor.
      */
     public function create()
     {
@@ -35,7 +35,7 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created teacher in storage.
+     * Armazena um novo professor no banco de dados.
      */
     public function store(StoreUserRequest $request)
     {
@@ -46,7 +46,7 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for editing the specified teacher.
+     * Mostra o formulário para editar o professor especificado.
      */
     public function edit(User $user)
     {
@@ -59,7 +59,7 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified teacher in storage.
+     * Atualiza o professor especificado no banco de dados.
      */
     public function update(UpdateUserRequest $request, User $user)
     {
@@ -70,7 +70,7 @@ class UserController extends Controller
     }
 
     /**
-     * Remove the specified teacher from storage.
+     * Remove o professor especificado do banco de dados.
      */
     public function destroy(User $user)
     {

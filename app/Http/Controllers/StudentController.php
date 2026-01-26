@@ -18,7 +18,7 @@ class StudentController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Exibe uma listagem de estudantes.
      */
     public function index(Request $request)
     {
@@ -28,7 +28,7 @@ class StudentController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Mostra o formulário para criar um novo estudante.
      */
     public function create()
     {
@@ -36,7 +36,7 @@ class StudentController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena um novo estudante no banco de dados.
      */
     public function store(StoreStudentRequest $request)
     {
@@ -47,7 +47,7 @@ class StudentController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe o estudante especificado.
      */
     public function show(Student $student)
     {
@@ -57,7 +57,7 @@ class StudentController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Mostra o formulário para editar o estudante especificado.
      */
     public function edit(Student $student)
     {
@@ -65,7 +65,7 @@ class StudentController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza o estudante especificado no banco de dados.
      */
     public function update(UpdateStudentRequest $request, Student $student)
     {
@@ -76,7 +76,7 @@ class StudentController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove o estudante especificado do banco de dados.
      */
     public function destroy(Student $student)
     {

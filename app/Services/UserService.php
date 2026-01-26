@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 class UserService
 {
     /**
-     * Get paginated teachers.
+     * Retorna os professores paginados.
      */
     public function getPaginatedTeachers(int $perPage = 10)
     {
@@ -16,7 +16,7 @@ class UserService
     }
 
     /**
-     * Create a new teacher.
+     * Cria um novo professor.
      */
     public function createTeacher(array $data): User
     {
@@ -29,7 +29,7 @@ class UserService
     }
 
     /**
-     * Update a teacher.
+     * Atualiza um professor.
      */
     public function updateTeacher(User $user, array $data): User
     {
@@ -46,7 +46,7 @@ class UserService
     }
 
     /**
-     * Delete a teacher.
+     * Remove um professor.
      *
      * @throws \Exception
      */

@@ -15,7 +15,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Show dashboard with statistics.
+     * Exibe o painel com estatísticas.
      */
     public function index()
     {

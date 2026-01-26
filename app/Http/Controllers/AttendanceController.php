@@ -19,7 +19,7 @@ class AttendanceController extends Controller
     }
 
     /**
-     * Display attendance list with filters.
+     * Exibe a lista de presenças com filtros.
      */
     public function index(Request $request)
     {
@@ -41,7 +41,7 @@ class AttendanceController extends Controller
     }
 
     /**
-     * Show form to mark attendance for a class (RF03).
+     * Mostra o formulário para marcar presenças de uma turma.
      */
     public function markAttendance(Request $request)
     {
@@ -73,7 +73,7 @@ class AttendanceController extends Controller
     }
 
     /**
-     * Store attendance records (RF03, RF09).
+     * Armazena os registros de presença.
      */
     public function store(StoreAttendanceRequest $request)
     {
@@ -91,7 +91,7 @@ class AttendanceController extends Controller
     }
 
     /**
-     * Show attendance history for a student (RF05).
+     * Exibe o histórico de presenças de um estudante.
      */
     public function studentHistory(Student $student)
     {
@@ -115,7 +115,7 @@ class AttendanceController extends Controller
     }
 
     /**
-     * Show attendance report for a class (RF06).
+     * Exibe o relatório de presenças de uma turma.
      */
     public function classReport(ClassRoom $class, Request $request)
     {
@@ -133,7 +133,7 @@ class AttendanceController extends Controller
     }
 
     /**
-     * Export attendances to CSV.
+     * Exporta as presenças para CSV.
      */
     public function export(Request $request)
     {

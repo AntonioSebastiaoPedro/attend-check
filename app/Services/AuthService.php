@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class AuthService
 {
     /**
-     * Attempt to login.
+     * Tenta realizar o login.
      */
     public function login(array $credentials, bool $remember = false): bool
     {
@@ -16,7 +16,7 @@ class AuthService
     }
 
     /**
-     * Logout the user.
+     * Realiza o logout do usuário.
      */
     public function logout(Request $request): void
     {

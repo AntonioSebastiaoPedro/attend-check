@@ -21,7 +21,7 @@ class ClassRoomController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Exibe uma listagem de turmas.
      */
     public function index(Request $request)
     {
@@ -34,7 +34,7 @@ class ClassRoomController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Mostra o formulário para criar uma nova turma.
      */
     public function create()
     {
@@ -43,7 +43,7 @@ class ClassRoomController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena uma nova turma no banco de dados.
      */
     public function store(StoreClassRoomRequest $request)
     {
@@ -54,7 +54,7 @@ class ClassRoomController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe a turma especificada.
      */
     public function show(ClassRoom $class)
     {
@@ -64,7 +64,7 @@ class ClassRoomController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Mostra o formulário para editar a turma especificada.
      */
     public function edit(ClassRoom $class)
     {
@@ -73,7 +73,7 @@ class ClassRoomController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza a turma especificada no banco de dados.
      */
     public function update(UpdateClassRoomRequest $request, ClassRoom $class)
     {
@@ -84,7 +84,7 @@ class ClassRoomController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove a turma especificada do banco de dados.
      */
     public function destroy(ClassRoom $class)
     {
@@ -95,7 +95,7 @@ class ClassRoomController extends Controller
     }
 
     /**
-     * Show form to manage students in a class.
+     * Mostra formulário para gerenciar estudantes em uma turma.
      */
     public function students(ClassRoom $class)
     {
@@ -106,7 +106,7 @@ class ClassRoomController extends Controller
     }
 
     /**
-     * Attach students to a class.
+     * Adiciona estudantes a uma turma.
      */
     public function attachStudents(AttachStudentsRequest $request, ClassRoom $class)
     {
@@ -117,7 +117,7 @@ class ClassRoomController extends Controller
     }
 
     /**
-     * Detach a student from a class.
+     * Remove um estudante de uma turma.
      */
     public function detachStudent(ClassRoom $class, Student $student)
     {

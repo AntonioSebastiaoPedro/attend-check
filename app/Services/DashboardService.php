@@ -11,7 +11,7 @@ use Carbon\Carbon;
 class DashboardService
 {
     /**
-     * Get dashboard statistics.
+     * Retorna as estatísticas do painel.
      */
     public function getStats(User $user): array
     {

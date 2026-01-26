@@ -16,7 +16,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Show login form.
+     * Mostra o formulário de login.
      */
     public function showLogin()
     {
@@ -24,7 +24,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle login request (RF01).
+     * Processa o pedido de login.
      */
     public function login(LoginRequest $request)
     {
@@ -41,7 +41,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle logout request (RF10).
+     * Processa o pedido de logout.
      */
     public function logout(Request $request)
     {
