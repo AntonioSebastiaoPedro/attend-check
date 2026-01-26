@@ -73,7 +73,7 @@ class AttendanceController extends Controller
      */
     public function markAttendance(Request $request)
     {
-        $classId = $request->get('class_id');
+        $selectedClassId = $request->get('class_id');
         $date = $request->get('date', now()->format('Y-m-d'));
 
         $classes = ClassRoom::active()
@@ -86,18 +86,18 @@ class AttendanceController extends Controller
         $students = [];
         $existingAttendances = [];
 
-        if ($classId) {
-            $class = ClassRoom::findOrFail($classId);
+        if ($selectedClassId) {
+            $class = ClassRoom::findOrFail($selectedClassId);
             $students = $class->students()->active()->orderBy('name')->get();
 
             // Carregar presenças já registradas para esta data
-            $existingAttendances = Attendance::forClass($classId)
+            $existingAttendances = Attendance::forClass($selectedClassId)
                 ->forDate($date)
                 ->get()
                 ->keyBy('student_id');
         }
 
-        return view('attendances.mark', compact('classes', 'students', 'existingAttendances', 'classId', 'date'));
+        return view('attendances.mark', compact('classes', 'students', 'existingAttendances', 'selectedClassId', 'date'));
     }
 
     /**
