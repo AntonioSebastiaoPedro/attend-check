@@ -83,14 +83,14 @@
                             </span>
                         </td>
                         <td class="pr-4 text-right vertical-align-middle" style="vertical-align: middle;">
-                            <div class="btn-group btn-group-sm">
-                                <a href="{{ route('classes.show', $class) }}" class="btn btn-outline-primary">Ver</a>
-                                <a href="{{ route('classes.students', $class) }}" class="btn btn-outline-success">Alunos</a>
-                                <a href="{{ route('classes.edit', $class) }}" class="btn btn-outline-dark">Editar</a>
+                            <div class="d-flex justify-content-end align-items-center">
+                                <a href="{{ route('classes.show', $class) }}" class="btn btn-sm btn-outline-primary mr-1">Ver</a>
+                                <a href="{{ route('classes.students', $class) }}" class="btn btn-sm btn-outline-success mr-1">Alunos</a>
+                                <a href="{{ route('classes.edit', $class) }}" class="btn btn-sm btn-outline-dark mr-1">Editar</a>
                                 <form action="{{ route('classes.destroy', $class) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-outline-danger"
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
                                         onclick="return confirm('Deseja realmente remover esta turma?')">
                                         Remover
                                     </button>

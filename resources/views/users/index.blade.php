@@ -47,16 +47,16 @@
                             {{ $user->created_at->format('d/m/Y') }}
                         </td>
                         <td class="text-right px-4 py-3">
-                            <div class="btn-group">
-                                <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-outline-primary" title="Editar">
-                                    <i class="fas fa-edit"></i>
+                            <div class="d-flex justify-content-end align-items-center">
+                                <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-info shadow-sm mr-2" title="Editar">
+                                    <i class="fas fa-edit mr-1"></i> Editar
                                 </a>
                                 @if($user->id !== auth()->id())
                                 <form action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
-                                        <i class="fas fa-trash"></i>
+                                    <button type="submit" class="btn btn-sm btn-danger shadow-sm" title="Excluir">
+                                        <i class="fas fa-trash mr-1"></i> Excluir
                                     </button>
                                 </form>
                                 @endif
