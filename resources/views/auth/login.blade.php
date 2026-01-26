@@ -3,69 +3,73 @@
 @section('title', 'Login')
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-blue-600">PresenTrack</h1>
-            <p class="text-gray-600 mt-2">Sistema de Gestão de Presenças</p>
-        </div>
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-md-5">
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-5">
+                <div class="text-center mb-5">
+                    <h1 class="h2 font-weight-bold text-primary">PresenTrack</h1>
+                    <p class="text-muted">Sistema de Gestão de Presenças</p>
+                </div>
 
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
 
-            <div class="mb-4">
-                <label for="email" class="block text-gray-700 font-semibold mb-2">
-                    Email
-                </label>
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value="{{ old('email') }}"
-                    required
-                    autofocus
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('email') border-red-500 @enderror"
-                    placeholder="seu@email.com"
-                >
-                @error('email')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
+                    <div class="form-group mb-4">
+                        <label for="email" class="font-weight-bold">
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value="{{ old('email') }}"
+                            required
+                            autofocus
+                            class="form-control @error('email') is-invalid @enderror"
+                            placeholder="seu@email.com"
+                        >
+                        @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="password" class="font-weight-bold">
+                            Senha
+                        </label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            class="form-control @error('password') is-invalid @enderror"
+                            placeholder="••••••••"
+                        >
+                        @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" name="remember" class="custom-control-input" id="remember">
+                            <label class="custom-control-label text-muted" for="remember">Lembrar-me</label>
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary btn-block font-weight-bold"
+                    >
+                        Entrar
+                    </button>
+                </form>
+
+                <div class="mt-4 text-center text-muted small">
+                    <p class="mb-0">Acesso exclusivo para Administradores e Professores</p>
+                </div>
             </div>
-
-            <div class="mb-6">
-                <label for="password" class="block text-gray-700 font-semibold mb-2">
-                    Senha
-                </label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('password') border-red-500 @enderror"
-                    placeholder="••••••••"
-                >
-                @error('password')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="mb-6">
-                <label class="flex items-center">
-                    <input type="checkbox" name="remember" class="mr-2">
-                    <span class="text-gray-700">Lembrar-me</span>
-                </label>
-            </div>
-
-            <button
-                type="submit"
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition duration-200"
-            >
-                Entrar
-            </button>
-        </form>
-
-        <div class="mt-6 text-center text-sm text-gray-600">
-            <p>Acesso exclusivo para Administradores e Professores</p>
         </div>
     </div>
 </div>

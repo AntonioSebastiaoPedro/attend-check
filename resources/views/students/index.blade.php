@@ -3,66 +3,76 @@
 @section('title', 'Lista de Estudantes')
 
 @section('content')
-<div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold">Estudantes</h1>
-    <a href="{{ route('students.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-        Novo Estudante
-    </a>
+<div class="row mb-4 align-items-center">
+    <div class="col">
+        <h1 class="h3 font-weight-bold mb-0">Estudantes</h1>
+    </div>
+    <div class="col-auto">
+        <a href="{{ route('students.create') }}" class="btn btn-primary shadow-sm">
+            Novo Estudante
+        </a>
+    </div>
 </div>
 
-<div class="bg-white rounded-lg shadow overflow-hidden">
-    <div class="p-4 border-b">
-        <form action="{{ route('students.index') }}" method="GET" class="flex gap-4">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por nome ou matrícula..." class="border rounded px-4 py-2 flex-grow">
-            <select name="active" class="border rounded px-4 py-2">
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white border-bottom py-3">
+        <form action="{{ route('students.index') }}" method="GET" class="form-inline">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por nome ou matrícula..." class="form-control mr-2 flex-grow-1">
+            <select name="active" class="form-control mr-2">
                 <option value="1" {{ request('active') == '1' ? 'selected' : '' }}>Ativos</option>
                 <option value="0" {{ request('active') == '0' ? 'selected' : '' }}>Inativos</option>
             </select>
-            <button type="submit" class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">Filtrar</button>
+            <button type="submit" class="btn btn-secondary">Filtrar</button>
         </form>
     </div>
 
-    <table class="w-full">
-        <thead class="bg-gray-50 uppercase text-xs font-semibold text-gray-500">
-            <tr>
-                <th class="px-6 py-3 text-left">Nome</th>
-                <th class="px-6 py-3 text-left">Matrícula</th>
-                <th class="px-6 py-3 text-left">Email</th>
-                <th class="px-6 py-3 text-left">Status</th>
-                <th class="px-6 py-3 text-right">Ações</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200">
-            @forelse($students as $student)
-            <tr>
-                <td class="px-6 py-4 whitespace-nowrap">{{ $student->name }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ $student->registration_number }}</td>
-                <td class="px-6 py-4 whitespace-nowrap">{{ $student->email ?? 'N/A' }}</td>
-                <td class="px-6 py-4">
-                    <span class="px-2 py-1 text-xs rounded-full {{ $student->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                        {{ $student->active ? 'Ativo' : 'Inativo' }}
-                    </span>
-                </td>
-                <td class="px-6 py-4 text-right space-x-2 flex justify-end items-center">
-                    <a href="{{ route('students.show', $student) }}" class="text-blue-600 hover:underline">Ver</a>
-                    <a href="{{ route('students.edit', $student) }}" class="text-yellow-600 hover:underline">Editar</a>
-                    <form action="{{ route('students.destroy', $student) }}" method="POST" class="inline" onsubmit="return confirm('Tem certeza que deseja remover este estudante?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="text-red-600 hover:underline">Excluir</button>
-                    </form>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="5" class="px-6 py-4 text-center text-gray-500">Nenhum estudante encontrado.</td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="bg-light text-uppercase">
+                <tr>
+                    <th class="border-top-0 small font-weight-bold text-muted">Nome</th>
+                    <th class="border-top-0 small font-weight-bold text-muted">Matrícula</th>
+                    <th class="border-top-0 small font-weight-bold text-muted">Email</th>
+                    <th class="border-top-0 small font-weight-bold text-muted">Status</th>
+                    <th class="border-top-0 small font-weight-bold text-muted text-right">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($students as $student)
+                <tr>
+                    <td class="vertical-align-middle">{{ $student->name }}</td>
+                    <td class="vertical-align-middle">{{ $student->registration_number }}</td>
+                    <td class="vertical-align-middle">{{ $student->email ?? 'N/A' }}</td>
+                    <td class="vertical-align-middle">
+                        <span class="badge badge-pill {{ $student->active ? 'badge-success' : 'badge-danger' }}">
+                            {{ $student->active ? 'Ativo' : 'Inativo' }}
+                        </span>
+                    </td>
+                    <td class="vertical-align-middle text-right">
+                        <div class="btn-group btn-group-sm">
+                            <a href="{{ route('students.show', $student) }}" class="btn btn-outline-primary">Ver</a>
+                            <a href="{{ route('students.edit', $student) }}" class="btn btn-outline-warning">Editar</a>
+                            <form action="{{ route('students.destroy', $student) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover este estudante?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-outline-danger">Excluir</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-muted">Nenhum estudante encontrado.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 
-    <div class="p-4">
-        {{ $students->links() }}
+    <div class="card-footer bg-white border-top">
+        <div class="d-flex justify-content-center">
+            {{ $students->links() }}
+        </div>
     </div>
 </div>
 @endsection

@@ -5,64 +5,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'PresenTrack') - Sistema de Gestão de Presenças</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <!-- jQuery, Popper.js, Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
 </head>
-<body class="bg-gray-100">
+<body class="bg-light">
     @auth
     <!-- Navbar -->
-    <nav class="bg-blue-600 text-white shadow-lg">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <div class="flex items-center space-x-8">
-                    <a href="{{ route('dashboard') }}" class="text-2xl font-bold">PresenTrack</a>
-                    <div class="hidden md:flex space-x-6">
-                        <a href="{{ route('dashboard') }}" class="hover:text-blue-200">Dashboard</a>
-                        <a href="{{ route('classes.index') }}" class="hover:text-blue-200">Turmas</a>
-                        <a href="{{ route('students.index') }}" class="hover:text-blue-200">Estudantes</a>
-                        <a href="{{ route('attendances.mark') }}" class="hover:text-blue-200">Presença</a>
-                        <a href="{{ route('attendances.index') }}" class="hover:text-blue-200">Relatórios</a>
-                        @can('admin')
-                        <a href="{{ route('users.index') }}" class="hover:text-blue-200">Professores</a>
-                        @endcan
-                    </div>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <span>{{ auth()->user()->name }}</span>
-                    <span class="text-xs bg-blue-500 px-2 py-1 rounded">{{ ucfirst(auth()->user()->role) }}</span>
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded">
-                            Sair
-                        </button>
-                    </form>
-                </div>
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand font-weight-bold" href="{{ route('dashboard') }}">
+                PresenTrack
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- Left Side Of Navbar -->
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('classes.index') }}">Turmas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('students.index') }}">Estudantes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('attendances.mark') }}">Presença</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('attendances.index') }}">Relatórios</a>
+                    </li>
+                    @can('admin')
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('users.index') }}">Professores</a>
+                    </li>
+                    @endcan
+                </ul>
+
+                <!-- Right Side Of Navbar -->
+                <ul class="navbar-nav ml-auto align-items-center">
+                    <li class="nav-item text-white mr-3">
+                        {{ auth()->user()->name }}
+                        <span class="badge badge-info ml-1">{{ ucfirst(auth()->user()->role) }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <form method="POST" action="{{ route('logout') }}" class="form-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                Sair
+                            </button>
+                        </form>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
     @endauth
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
+    <main class="container py-4">
         <!-- Flash Messages -->
         @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
         @endif
 
         @if(session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
             {{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
         @endif
 
         @if($errors->any())
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            <ul>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul class="mb-0">
                 @foreach($errors->all() as $error)
                 <li>{{ $error }}</li>
                 @endforeach
             </ul>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
         @endif
 
