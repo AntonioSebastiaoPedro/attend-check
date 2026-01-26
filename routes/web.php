@@ -33,7 +33,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Turmas (Gestão apenas Admin)
     Route::middleware(['can:admin'])->group(function () {
-        Route::get('/classes/create', [ClassRoomController::class, 'create'])->name('classes.create');
+        Route::get('/classes/create/new', [ClassRoomController::class, 'create'])->name('classes.create');
         Route::post('/classes', [ClassRoomController::class, 'store'])->name('classes.store');
         Route::get('/classes/{class}/edit', [ClassRoomController::class, 'edit'])->name('classes.edit');
         Route::put('/classes/{class}', [ClassRoomController::class, 'update'])->name('classes.update');
@@ -51,8 +51,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Estudantes (Gestão apenas Admin)
     Route::middleware(['can:admin'])->group(function () {
-        Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
         Route::post('/students', [StudentController::class, 'store'])->name('students.store');
+        Route::get('/students/create/new', [StudentController::class, 'create'])->name('students.create');
         Route::get('/students/{student}/edit', [StudentController::class, 'edit'])->name('students.edit');
         Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
         Route::delete('/students/{student}', [StudentController::class, 'destroy'])->name('students.destroy');

@@ -34,7 +34,7 @@
                                 placeholder="Ex: João Silva"
                             >
                             @error('name')
-                            <div class="invalid-feedback">{{  }}</div>
+                            <div class="invalid-feedback"></div>
                             @enderror
                         </div>
                     </div>
@@ -52,7 +52,7 @@
                                 placeholder="Ex: 2025001"
                             >
                             @error('registration_number')
-                            <div class="invalid-feedback">{{  }}</div>
+                            <div class="invalid-feedback"></div>
                             @enderror
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                                 placeholder="estudante@exemplo.com"
                             >
                             @error('email')
-                            <div class="invalid-feedback">{{  }}</div>
+                            <div class="invalid-feedback"></div>
                             @enderror
                         </div>
                     </div>
@@ -88,7 +88,7 @@
                                 placeholder="(00) 00000-0000"
                             >
                             @error('phone')
-                            <div class="invalid-feedback">{{  }}</div>
+                            <div class="invalid-feedback"></div>
                             @enderror
                         </div>
                     </div>
@@ -104,7 +104,7 @@
                         class="form-control @error('birth_date') is-invalid @enderror"
                     >
                     @error('birth_date')
-                    <div class="invalid-feedback">{{  }}</div>
+                    <div class="invalid-feedback"></div>
                     @enderror
                 </div>
 
@@ -118,7 +118,7 @@
                         placeholder="Rua, Número, Bairro, Cidade..."
                     >{{ old('address') }}</textarea>
                     @error('address')
-                    <div class="invalid-feedback">{{  }}</div>
+                    <div class="invalid-feedback"></div>
                     @enderror
                 </div>
 
