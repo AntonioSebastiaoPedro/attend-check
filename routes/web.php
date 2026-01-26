@@ -38,11 +38,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/classes/{class}/edit', [ClassRoomController::class, 'edit'])->name('classes.edit');
         Route::put('/classes/{class}', [ClassRoomController::class, 'update'])->name('classes.update');
         Route::delete('/classes/{class}', [ClassRoomController::class, 'destroy'])->name('classes.destroy');
-
-        Route::get('/classes/{class}/students', [ClassRoomController::class, 'students'])->name('classes.students');
-        Route::post('/classes/{class}/students', [ClassRoomController::class, 'attachStudents'])->name('classes.students.attach');
-        Route::delete('/classes/{class}/students/{student}', [ClassRoomController::class, 'detachStudent'])->name('classes.students.detach');
     });
+
+    // Gestão de Alunos na Turma (Admin e Professores)
+    Route::get('/classes/{class}/students', [ClassRoomController::class, 'students'])->name('classes.students');
+    Route::post('/classes/{class}/students', [ClassRoomController::class, 'attachStudents'])->name('classes.students.attach');
+    Route::delete('/classes/{class}/students/{student}', [ClassRoomController::class, 'detachStudent'])->name('classes.students.detach');
 
     // Estudantes
     Route::resource('students', StudentController::class);

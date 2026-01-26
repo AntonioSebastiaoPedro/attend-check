@@ -10,10 +10,10 @@
             <p class="text-muted mb-0">Código: <span class="badge badge-light border">{{ $class->code }}</span></p>
         </div>
         <div class="btn-group">
-            @can('admin')
             <a href="{{ route('classes.students', $class) }}" class="btn btn-success shadow-sm">
                  Gerenciar Alunos
             </a>
+            @can('admin')
             <a href="{{ route('classes.edit', $class) }}" class="btn btn-primary shadow-sm mx-1">
                  Editar
             </a>
