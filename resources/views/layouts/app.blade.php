@@ -8,16 +8,11 @@
 
     <!-- Bootstrap 4 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-
-    <!-- jQuery, Popper.js, Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
 </head>
-<body class="bg-light">
+<body class="bg-light" style="padding-top: 80px;">
     @auth
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-md navbar-dark bg-primary shadow-sm">
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary shadow-sm fixed-top">
         <div class="container">
             <a class="navbar-brand font-weight-bold" href="{{ route('dashboard') }}">
                 PresenTrack
@@ -107,5 +102,10 @@
 
         @yield('content')
     </main>
+
+    <!-- jQuery, Popper.js, Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
