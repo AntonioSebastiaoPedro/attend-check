@@ -30,7 +30,7 @@
                                 <th class="text-right px-4 border-top-0">Ação</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y">
+                        <tbody class="">
                             @forelse($class->students as $student)
                             <tr>
                                 <td class="px-4 py-3 vertical-align-middle" style="vertical-align: middle;">

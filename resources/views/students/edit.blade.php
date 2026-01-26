@@ -1,142 +1,78 @@
 @extends('layouts.app')
 
-@section('title', 'Editar Estudante')
+@section('title', 'Editar Aluno - ' . $student->name)
 
 @section('content')
-<div class="max-w-3xl mx-auto">
-    <div class="mb-6 flex items-center justify-between">
-        <h1 class="text-3xl font-bold text-gray-800">Editar Estudante</h1>
-        <a href="{{ route('students.index') }}" class="text-gray-600 hover:text-gray-800 flex items-center gap-1">
-            <span>&larr; Voltar para lista</span>
+<div class="container pb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 font-weight-bold text-dark mb-0">Editar Aluno</h1>
+            <p class="text-muted mb-0">Atualize as informações de {{ $student->name }}</p>
+        </div>
+        <a href="{{ route('students.index') }}" class="btn btn-outline-secondary">
+            Voltar para lista
         </a>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
-        <form method="POST" action="{{ route('students.update', $student) }}">
-            @csrf
-            @method('PUT')
+    @if ($errors->any())
+    <div class="alert alert-danger shadow-sm border-0 mb-4">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="mb-4">
-                    <label for="name" class="block text-gray-700 font-semibold mb-2">Nome Completo *</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value="{{ old('name', $student->name) }}"
-                        required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('name') border-red-500 @enderror"
-                        placeholder="Ex: João Silva"
-                    >
-                    @error('name')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+            <form action="{{ route('students.update', $student) }}" method="POST">
+                @csrf
+                @method('PUT')
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            <label for="name" class="font-weight-bold text-dark small text-uppercase">Nome Completo</label>
+                            <input type="text" name="name" id="name" value="{{ old('name', $student->name) }}" class="form-control @error('name') is-invalid @enderror" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            <label for="registration_number" class="font-weight-bold text-dark small text-uppercase">Nº de Matrícula</label>
+                            <input type="text" name="registration_number" id="registration_number" value="{{ old('registration_number', $student->registration_number) }}" class="form-control @error('registration_number') is-invalid @enderror" required>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="mb-4">
-                    <label for="registration_number" class="block text-gray-700 font-semibold mb-2">Nº de Matrícula *</label>
-                    <input
-                        type="text"
-                        id="registration_number"
-                        name="registration_number"
-                        value="{{ old('registration_number', $student->registration_number) }}"
-                        required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('registration_number') border-red-500 @enderror"
-                        placeholder="Ex: 2025001"
-                    >
-                    @error('registration_number')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            <label for="date_of_birth" class="font-weight-bold text-dark small text-uppercase">Data de Nascimento</label>
+                            <input type="date" name="date_of_birth" id="date_of_birth" value="{{ old('date_of_birth', $student->date_of_birth->format('Y-m-d')) }}" class="form-control @error('date_of_birth') is-invalid @enderror" required>
+                        </div>
+                    </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="mb-4">
-                    <label for="email" class="block text-gray-700 font-semibold mb-2">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value="{{ old('email', $student->email) }}"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('email') border-red-500 @enderror"
-                        placeholder="estudante@exemplo.com"
-                    >
-                    @error('email')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+                    <div class="col-md-6 mb-3">
+                        <div class="form-group">
+                            <label for="status" class="font-weight-bold text-dark small text-uppercase">Status</label>
+                            <select name="status" id="status" class="form-control @error('status') is-invalid @enderror" required>
+                                <option value="active" {{ old('status', $student->status) == 'active' ? 'selected' : '' }}>Ativo</option>
+                                <option value="inactive" {{ old('status', $student->status) == 'inactive' ? 'selected' : '' }}>Inativo</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="mb-4">
-                    <label for="phone" class="block text-gray-700 font-semibold mb-2">Telefone</label>
-                    <input
-                        type="text"
-                        id="phone"
-                        name="phone"
-                        value="{{ old('phone', $student->phone) }}"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('phone') border-red-500 @enderror"
-                        placeholder="(00) 00000-0000"
-                    >
-                    @error('phone')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+                <div class="mt-4 pt-3 border-top">
+                    <button type="submit" class="btn btn-primary px-5 font-weight-bold shadow-sm">
+                        Atualizar Aluno
+                    </button>
+                    <a href="{{ route('students.index') }}" class="btn btn-link text-muted ml-2">Cancelar</a>
                 </div>
-            </div>
-
-            <div class="mb-4">
-                <label for="birth_date" class="block text-gray-700 font-semibold mb-2">Data de Nascimento</label>
-                <input
-                    type="date"
-                    id="birth_date"
-                    name="birth_date"
-                    value="{{ old('birth_date', $student->birth_date ? $student->birth_date->format('Y-m-d') : '') }}"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('birth_date') border-red-500 @enderror"
-                >
-                @error('birth_date')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="mb-4">
-                <label for="address" class="block text-gray-700 font-semibold mb-2">Endereço</label>
-                <textarea
-                    id="address"
-                    name="address"
-                    rows="2"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('address') border-red-500 @enderror"
-                    placeholder="Rua, Número, Bairro, Cidade..."
-                >{{ old('address', $student->address) }}</textarea>
-                @error('address')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="mb-6">
-                <label class="flex items-center space-x-3 cursor-pointer">
-                    <input
-                        type="hidden"
-                        name="active"
-                        value="0"
-                    >
-                    <input
-                        type="checkbox"
-                        name="active"
-                        value="1"
-                        {{ old('active', $student->active) ? 'checked' : '' }}
-                        class="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                    >
-                    <span class="text-gray-700 font-semibold">Estudante Ativo</span>
-                </label>
-            </div>
-
-            <div class="flex items-center justify-end gap-3">
-                <a href="{{ route('students.index') }}" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
-                    Cancelar
-                </a>
-                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md">
-                    Atualizar Estudante
-                </button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 @endsection

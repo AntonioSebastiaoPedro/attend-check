@@ -31,7 +31,7 @@
                         <th class="text-right px-4 py-3 border-top-0">Ações</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y">
+                <tbody>
                     @forelse($users as $user)
                     <tr>
                         <td class="px-4 py-3">
@@ -46,17 +46,17 @@
                         <td class="py-3 text-muted small">
                             {{ $user->created_at->format('d/m/Y') }}
                         </td>
-                        <td class="text-right px-4 py-3">
+                        <td class="text-right px-4 py-3 align-middle">
                             <div class="d-flex justify-content-end align-items-center">
-                                <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-info shadow-sm mr-2" title="Editar">
-                                    <i class="fas fa-edit mr-1"></i> Editar
+                                <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-outline-dark mr-1" title="Editar">
+                                    Editar
                                 </a>
                                 @if($user->id !== auth()->id())
                                 <form action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger shadow-sm" title="Excluir">
-                                        <i class="fas fa-trash mr-1"></i> Excluir
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Remover">
+                                        Remover
                                     </button>
                                 </form>
                                 @endif
