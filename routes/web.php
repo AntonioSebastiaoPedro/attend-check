@@ -27,11 +27,22 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Turmas
-    Route::resource('classes', ClassRoomController::class);
-    Route::get('/classes/{class}/students', [ClassRoomController::class, 'students'])->name('classes.students');
-    Route::post('/classes/{class}/students', [ClassRoomController::class, 'attachStudents'])->name('classes.students.attach');
-    Route::delete('/classes/{class}/students/{student}', [ClassRoomController::class, 'detachStudent'])->name('classes.students.detach');
+    // Turmas (Visualização)
+    Route::get('/classes', [ClassRoomController::class, 'index'])->name('classes.index');
+    Route::get('/classes/{class}', [ClassRoomController::class, 'show'])->name('classes.show');
+
+    // Turmas (Gestão apenas Admin)
+    Route::middleware(['can:admin'])->group(function () {
+        Route::get('/classes/create', [ClassRoomController::class, 'create'])->name('classes.create');
+        Route::post('/classes', [ClassRoomController::class, 'store'])->name('classes.store');
+        Route::get('/classes/{class}/edit', [ClassRoomController::class, 'edit'])->name('classes.edit');
+        Route::put('/classes/{class}', [ClassRoomController::class, 'update'])->name('classes.update');
+        Route::delete('/classes/{class}', [ClassRoomController::class, 'destroy'])->name('classes.destroy');
+
+        Route::get('/classes/{class}/students', [ClassRoomController::class, 'students'])->name('classes.students');
+        Route::post('/classes/{class}/students', [ClassRoomController::class, 'attachStudents'])->name('classes.students.attach');
+        Route::delete('/classes/{class}/students/{student}', [ClassRoomController::class, 'detachStudent'])->name('classes.students.detach');
+    });
 
     // Estudantes
     Route::resource('students', StudentController::class);

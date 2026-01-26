@@ -8,11 +8,13 @@
         <div class="col">
             <h1 class="h3 font-weight-bold mb-0 text-dark">Turmas</h1>
         </div>
+        @can('admin')
         <div class="col-auto">
             <a href="{{ route('classes.create') }}" class="btn btn-primary shadow-sm">
                 + Nova Turma
             </a>
         </div>
+        @endcan
     </div>
 
     <!-- Filtros -->
@@ -85,6 +87,7 @@
                         <td class="pr-4 text-right vertical-align-middle" style="vertical-align: middle;">
                             <div class="d-flex justify-content-end align-items-center">
                                 <a href="{{ route('classes.show', $class) }}" class="btn btn-sm btn-outline-primary mr-1">Ver</a>
+                                @can('admin')
                                 <a href="{{ route('classes.students', $class) }}" class="btn btn-sm btn-outline-success mr-1">Alunos</a>
                                 <a href="{{ route('classes.edit', $class) }}" class="btn btn-sm btn-outline-dark mr-1">Editar</a>
                                 <form action="{{ route('classes.destroy', $class) }}" method="POST" class="d-inline">
@@ -95,6 +98,7 @@
                                         Remover
                                     </button>
                                 </form>
+                                @endcan
                             </div>
                         </td>
                     </tr>
@@ -111,9 +115,11 @@
         @else
         <div class="card-body text-center py-5">
             <p class="text-muted mb-0">Nenhuma turma encontrada.</p>
+            @can('admin')
             <a href="{{ route('classes.create') }}" class="btn btn-link mt-2">
                 Criar a primeira turma
             </a>
+            @endcan
         </div>
         @endif
     </div>

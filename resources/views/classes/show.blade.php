@@ -10,12 +10,14 @@
             <p class="text-muted mb-0">Código: <span class="badge badge-light border">{{ $class->code }}</span></p>
         </div>
         <div class="btn-group">
+            @can('admin')
             <a href="{{ route('classes.students', $class) }}" class="btn btn-success shadow-sm">
                  Gerenciar Alunos
             </a>
             <a href="{{ route('classes.edit', $class) }}" class="btn btn-primary shadow-sm mx-1">
                  Editar
             </a>
+            @endcan
             <a href="{{ route('classes.index') }}" class="btn btn-outline-secondary shadow-sm">
                  Voltar
             </a>
@@ -63,7 +65,7 @@
                     <h5 class="card-title mb-0 font-weight-bold text-dark">Estudantes Matriculados</h5>
                     <span class="badge badge-primary badge-pill">{{ $class->students->count() }} Alunos</span>
                 </div>
-                
+
                 @if($class->students->count() > 0)
                 <div class="table-responsive">
                     <table class="table table-hover table-sm mb-0">
@@ -105,7 +107,7 @@
                     <h2 class="font-weight-bold mb-0">{{ $class->students->count() }}</h2>
                 </div>
             </div>
-            
+
             <div class="card shadow-sm border-0 mb-4 bg-success text-white text-center">
                 <div class="card-body">
                     <p class="small text-uppercase mb-1 opacity-75">Presenças</p>
